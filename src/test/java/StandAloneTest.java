@@ -1,4 +1,5 @@
 import PageObjects.CartPage;
+import PageObjects.CheckoutPage;
 import PageObjects.LandingPage;
 import PageObjects.ProductCatalogue;
 import org.openqa.selenium.*;
@@ -21,6 +22,7 @@ public class StandAloneTest {
         driver.manage().window().maximize();
 
         String productName = "IPHONE 13 PRO";
+
 
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
 
@@ -51,18 +53,12 @@ public class StandAloneTest {
 
       cartPage.clickCheckoutButton();
 
+        CheckoutPage checkout=new CheckoutPage(driver);
 
       //  wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[placeholder='Select Country']"))).sendKeys("IND");
+        checkout.selectCountry("India");
 
-        List<WebElement> countryOptions = driver.findElements(By.cssSelector(".ta-item span"));
-
-        WebElement country= countryOptions.stream()
-                .filter(option -> option.getText().trim().equalsIgnoreCase("India"))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Country not found"));
-
-
-        country.click();
+        checkout.clickPlaceOrderButton();
 
         //js.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.xpath("//a[.='Place Order ']")));
         //wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath("//a[.='Place Order ']")))).click();
