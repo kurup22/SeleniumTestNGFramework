@@ -1,3 +1,4 @@
+import PageObjects.LandingPage;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -16,8 +17,6 @@ public class StandAloneTest {
         options.addArguments("--force-device-scale-factor=1.2");
         WebDriver driver = new ChromeDriver(options);
         driver.manage().window().maximize();
-        driver.get("https://rahulshettyacademy.com/client");
-
 
         String productName = "IPHONE 13 PRO";
 
@@ -25,9 +24,9 @@ public class StandAloneTest {
 
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-        driver.findElement(By.id("userEmail")).sendKeys("vavetuts@tits.com");
-        driver.findElement(By.id("userPassword")).sendKeys("tits@Tuts22");
-        driver.findElement(By.id("login")).click();
+        LandingPage landingPage = new LandingPage(driver);
+        landingPage.goTo();
+        landingPage.login("vavetuts@tits.com","tits@Tuts22");
 
         List<WebElement> cards = driver.findElements(By.cssSelector(".card-body"));
 
