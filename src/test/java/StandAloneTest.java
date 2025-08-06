@@ -1,7 +1,4 @@
-import PageObjects.CartPage;
-import PageObjects.CheckoutPage;
-import PageObjects.LandingPage;
-import PageObjects.ProductCatalogue;
+import PageObjects.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -60,6 +57,8 @@ public class StandAloneTest {
 
         checkout.clickPlaceOrderButton();
 
+        OrderConfirmationPage orderConfirmationPage=new OrderConfirmationPage(driver);
+         Assert.assertEquals(orderConfirmationPage.getConfirmationMessage(), "THANKYOU FOR THE ORDER.");
         //js.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.xpath("//a[.='Place Order ']")));
         //wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath("//a[.='Place Order ']")))).click();
 
