@@ -1,4 +1,5 @@
 import PageObjects.LandingPage;
+import PageObjects.ProductCatalogue;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -20,30 +21,23 @@ public class StandAloneTest {
 
         String productName = "IPHONE 13 PRO";
 
-
-
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+
         LandingPage landingPage = new LandingPage(driver);
         landingPage.goTo();
         landingPage.login("vavetuts@tits.com","tits@Tuts22");
 
-        List<WebElement> cards = driver.findElements(By.cssSelector(".card-body"));
+        ProductCatalogue productCatalogue=new ProductCatalogue(WebDriver driver);
+        productCatalogue.waitForAllElementToAppear();
+        productCatalogue.clickAddToCartOfProduct(productName);
 
-        WebElement addToCartButtonOfProduct = cards.stream()
-                .filter(card -> card.findElement(By.cssSelector("b")).getText().contains(productName))
-                .map(card -> card.findElement(By.cssSelector("button:nth-of-type(2)")))
-                .findFirst().orElse(null);
+        productCatalogue.waitForSpinnerToAppear();
+        productCatalogue.validateAddedToCartMessage();
+        productCatalogue.waitForSpinnerToDisappear();
+        productCatalogue.waitForAddedToCartMessageToDisappear();
 
-        addToCartButtonOfProduct.click();
-
-
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".ngx-spinner-overlay")));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[aria-label='Product Added To Cart']")));
-        wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.cssSelector(".ngx-spinner-overlay"))));
-        wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.cssSelector("[aria-label='Product Added To Cart']"))));
-
-        driver.findElement(By.cssSelector("[routerlink*='cart']")).click();
+        productCatalogue.goToCartPage();
+        
 
         List<WebElement> cartElements = driver.findElements(By.cssSelector(".cartSection h3"));
 
