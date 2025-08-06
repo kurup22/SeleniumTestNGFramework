@@ -3,6 +3,7 @@ package AbstractComponents;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -19,7 +20,12 @@ public class AbstractComponents {
         this.wait=new WebDriverWait(driver, Duration.ofSeconds(3));
     }
 
+    @FindBy(css = "[routerlink*='cart']")
+    WebElement cartLink;
 
+    public void goToCartPage() {
+        cartLink.click();
+    }
     public void waitForAllElementToAppear(List<WebElement> findBy) {
 
         wait.until(ExpectedConditions.visibilityOfAllElements(findBy));

@@ -28,8 +28,6 @@ public class ProductCatalogue extends AbstractComponents {
     @FindBy(css = "[aria-label='Product Added To Cart']")
     WebElement addedToCartMessage;
 
-    @FindBy(css = "[routerlink*='cart']")
-    WebElement cartLink;
 
 
     public void waitForAllElementToAppear() {
@@ -39,6 +37,7 @@ public class ProductCatalogue extends AbstractComponents {
     public void clickAddToCartOfProduct(String productName) {
         WebElement prod=cards.stream()
                 .filter(card -> card.findElement(By.cssSelector("b")).getText().equalsIgnoreCase(productName))
+                .map(card -> card.findElement(By.cssSelector("button:last-of-type")))
                 .findFirst()
                 .orElse(null);
 
@@ -61,9 +60,6 @@ public class ProductCatalogue extends AbstractComponents {
 
     }
 
-    public void goToCartPage(){
-        cartLink.click();
 
-    }
 
 }

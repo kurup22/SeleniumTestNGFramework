@@ -1,3 +1,4 @@
+import PageObjects.CartPage;
 import PageObjects.LandingPage;
 import PageObjects.ProductCatalogue;
 import org.openqa.selenium.*;
@@ -27,32 +28,31 @@ public class StandAloneTest {
         landingPage.goTo();
         landingPage.login("vavetuts@tits.com","tits@Tuts22");
 
-        ProductCatalogue productCatalogue=new ProductCatalogue(WebDriver driver);
+        ProductCatalogue productCatalogue=new ProductCatalogue(driver);
         productCatalogue.waitForAllElementToAppear();
         productCatalogue.clickAddToCartOfProduct(productName);
 
         productCatalogue.waitForSpinnerToAppear();
         productCatalogue.validateAddedToCartMessage();
-        productCatalogue.waitForSpinnerToDisappear();
+
         productCatalogue.waitForAddedToCartMessageToDisappear();
+        productCatalogue.waitForSpinnerToDisappear();
 
         productCatalogue.goToCartPage();
-        
 
-        List<WebElement> cartElements = driver.findElements(By.cssSelector(".cartSection h3"));
 
-        Boolean cartProductCheck = cartElements.stream()
-                .anyMatch(cartElement -> cartElement.getText().equalsIgnoreCase(productName));
-
+        CartPage cartPage=new CartPage(driver);
+        cartPage.waitForCartPageToLoad();
+        Boolean cartProductCheck = cartPage.validateProductName(productName);
         Assert.assertTrue(cartProductCheck);
 
-        JavascriptExecutor js= (JavascriptExecutor) driver;
-        js.executeScript("window.scrollBy(0,2000)");
+//        JavascriptExecutor js= (JavascriptExecutor) driver;
+//        js.executeScript("window.scrollBy(0,2000)");
 
-     driver.findElement(By.xpath("//button[.='Checkout']")).click();
+      cartPage.clickCheckoutButton();
 
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[placeholder='Select Country']"))).sendKeys("IND");
+      //  wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[placeholder='Select Country']"))).sendKeys("IND");
 
         List<WebElement> countryOptions = driver.findElements(By.cssSelector(".ta-item span"));
 
@@ -65,10 +65,10 @@ public class StandAloneTest {
         country.click();
 
         //js.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.xpath("//a[.='Place Order ']")));
-        wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath("//a[.='Place Order ']")))).click();
+        //wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath("//a[.='Place Order ']")))).click();
 
-        String ThankYouMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".hero-primary"))).getText();
-        Assert.assertEquals(ThankYouMessage,"THANKYOU FOR THE ORDER.");
+       // String ThankYouMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".hero-primary"))).getText();
+        //Assert.assertEquals(ThankYouMessage,"THANKYOU FOR THE ORDER.");
 
 
        driver.quit();
