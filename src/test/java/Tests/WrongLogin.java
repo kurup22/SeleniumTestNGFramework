@@ -12,7 +12,7 @@ public class WrongLogin extends BaseTest {
     public void wrongPassword() throws Exception {
         landingPage.login("vavetuts@tits.com", "Asasasa@123");
         String message = landingPage.getIncorrectLoginMessage();
-        Assert.assertEquals(message, "Incorrect emaidl or password.");
+        Assert.assertEquals(message, "Incorrect email or password.");
 
 
     }

@@ -46,23 +46,15 @@ public class BaseTest {
 
         switch(browser.toLowerCase()) {
 
+
             case "chrome":
                 ChromeOptions options=new ChromeOptions();
-                Map<String, Object> prefs = new HashMap<>();
-                prefs.put("credentials_enable_service", false);
-                prefs.put("profile.password_manager_enabled", false);
-                options.setExperimentalOption("prefs", prefs);
-                //options.addArguments("--user-data-dir=/tmp/chrome-profile-" + System.currentTimeMillis());
 
-                options.addArguments("--force-device-scale-factor=1.2");
-                options.addArguments("--disable-blink-features=AutomationControlled");
-                options.addArguments("--disable-infobars");
-                options.addArguments("--disable-notifications");
-                options.addArguments("--disable-save-password-bubble");
-                options.addArguments("--no-default-browser-check");
-                options.addArguments("--disable-autofill-keyboard-accessory-view");
-                options.addArguments("--disable-popup-blocking");
-                options.addArguments("--start-maximized");
+                //options.addArguments("--user-data-dir=/tmp/chrome-profile-" + System.currentTimeMillis());
+                options.addArguments("--force-device-scale-factor=0.9");
+                if(prop.getProperty("headless").equalsIgnoreCase("true") || System.getProperty("headless").equalsIgnoreCase("true")) {
+                    options.addArguments("--headless=new");
+                }
 
                 // Initialize ChromeDriver here
                 driver=new ChromeDriver(options);
@@ -123,11 +115,11 @@ public class BaseTest {
 
         TakesScreenshot ts=(TakesScreenshot) driver;
         File src=ts.getScreenshotAs(OutputType.FILE);
-        String destFilePath=System.getProperty("user.dir")+"//reports//"+testCaseName+".png";
+        String destFilePath=System.getProperty("user.dir")+"//reports//screenshots//"+testCaseName+".png";
         File dest=new File(destFilePath);
 
         FileUtils.copyFile(src, dest);
-        return destFilePath;
+        return "screenshots/"+testCaseName+".png";
 
         }
 
