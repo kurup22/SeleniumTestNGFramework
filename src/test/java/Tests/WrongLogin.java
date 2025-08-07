@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 
 public class WrongLogin extends BaseTest {
 
-    @Test
+    @Test(groups = {"smoke"})
     public void wrongPassword() throws Exception {
         landingPage.login("vavetuts@tits.com", "Asasasa@123");
         String message = landingPage.getIncorrectLoginMessage();
