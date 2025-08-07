@@ -39,8 +39,10 @@ public class CheckoutPage extends AbstractComponents {
         country.click();
     }
 
-    public void clickPlaceOrderButton() {
+    public OrderConfirmationPage clickPlaceOrderButton() {
         placeOrderButton.click();
+        OrderConfirmationPage orderConfirmationPage = new OrderConfirmationPage(driver);
+        return orderConfirmationPage;
     }
 
 }

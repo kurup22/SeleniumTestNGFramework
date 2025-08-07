@@ -25,9 +25,7 @@ public class StandAloneTest {
 
         LandingPage landingPage = new LandingPage(driver);
         landingPage.goTo();
-        landingPage.login("vavetuts@tits.com","tits@Tuts22");
-
-        ProductCatalogue productCatalogue=new ProductCatalogue(driver);
+        ProductCatalogue productCatalogue=landingPage.login("vavetuts@tits.com","tits@Tuts22");
         productCatalogue.waitForAllElementToAppear();
         productCatalogue.clickAddToCartOfProduct(productName);
 
@@ -37,10 +35,8 @@ public class StandAloneTest {
         productCatalogue.waitForAddedToCartMessageToDisappear();
         productCatalogue.waitForSpinnerToDisappear();
 
-        productCatalogue.goToCartPage();
+        CartPage cartPage=productCatalogue.goToCartPage();
 
-
-        CartPage cartPage=new CartPage(driver);
         cartPage.waitForCartPageToLoad();
         Boolean cartProductCheck = cartPage.validateProductName(productName);
         Assert.assertTrue(cartProductCheck);
@@ -48,17 +44,13 @@ public class StandAloneTest {
 //        JavascriptExecutor js= (JavascriptExecutor) driver;
 //        js.executeScript("window.scrollBy(0,2000)");
 
-      cartPage.clickCheckoutButton();
-
-        CheckoutPage checkout=new CheckoutPage(driver);
-
+        CheckoutPage checkout=cartPage.clickCheckoutButton();
       //  wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[placeholder='Select Country']"))).sendKeys("IND");
-        checkout.selectCountry("India");
+        checkout.selectCountry("United States");
 
-        checkout.clickPlaceOrderButton();
+        OrderConfirmationPage orderConfirmationPage= checkout.clickPlaceOrderButton();
 
-        OrderConfirmationPage orderConfirmationPage=new OrderConfirmationPage(driver);
-         Assert.assertEquals(orderConfirmationPage.getConfirmationMessage(), "THANKYOU FOR THE ORDER.");
+        Assert.assertEquals(orderConfirmationPage.getConfirmationMessage(), "THANKYOU FOR THE ORDER.");
         //js.executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.xpath("//a[.='Place Order ']")));
         //wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath("//a[.='Place Order ']")))).click();
 

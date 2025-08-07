@@ -34,8 +34,10 @@ WebDriver driver;
                  ele.getText().equalsIgnoreCase(productName));
      }
 
-     public void clickCheckoutButton() {
+     public CheckoutPage clickCheckoutButton() {
          checkoutButton.click();
+         CheckoutPage checkoutPage= new CheckoutPage(driver);
+         return checkoutPage;
      }
 
  }
