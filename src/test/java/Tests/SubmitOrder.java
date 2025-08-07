@@ -1,30 +1,27 @@
+package Tests;
+
 import PageObjects.*;
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import TestComponents.BaseTest;
+import com.beust.jcommander.Parameter;
 import org.testng.Assert;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
 
-import java.time.Duration;
-import java.util.List;
+import java.io.IOException;
 
-public class StandAloneTest {
-    public static void main(String[] args) {
+public class SubmitOrder extends BaseTest {
+
+   // String productName= "ZARA COAT 3";
+
+
+   @Parameters({"productName"})
+   @Test
+
+    public void submitOrder(String productName) throws Exception {
         // This is a placeholder for the main method.
         // You can add your test logic here.
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--force-device-scale-factor=1.2");
-        WebDriver driver = new ChromeDriver(options);
-        driver.manage().window().maximize();
-
-        String productName = "IPHONE 13 PRO";
 
 
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
-
-        LandingPage landingPage = new LandingPage(driver);
-        landingPage.goTo();
         ProductCatalogue productCatalogue=landingPage.login("vavetuts@tits.com","tits@Tuts22");
         productCatalogue.waitForAllElementToAppear();
         productCatalogue.clickAddToCartOfProduct(productName);
@@ -57,8 +54,19 @@ public class StandAloneTest {
        // String ThankYouMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".hero-primary"))).getText();
         //Assert.assertEquals(ThankYouMessage,"THANKYOU FOR THE ORDER.");
 
+      
 
-       driver.quit();
+    }
+
+    @Parameters({"productName"})
+    @Test  (dependsOnMethods = {"submitOrder"})
+    public void validateOrdersPage(String productName) throws IOException {
+
+       landingPage.login("vavetuts@tits.com","tits@Tuts22");
+       OrdersPage ordersPage=landingPage.goToOrdersPage();
+       ordersPage.waitForOrdersList();
+       Assert.assertEquals(ordersPage.getOrderProductName(productName),productName);
+
 
 
     }

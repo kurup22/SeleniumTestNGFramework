@@ -17,13 +17,18 @@ public class LandingPage extends AbstractComponents {
     }
 
 
-
     @FindBy(id = "userEmail")
     WebElement userEmail;
     @FindBy(id = "userPassword")
     WebElement userPassword;
     @FindBy(id = "login")
     WebElement loginButton;
+
+    @FindBy(css = "div[aria-label*='Incorrect']")
+    WebElement incorrectLoginMessage;
+
+    @FindBy(css = ".invalid-feedback div")
+    WebElement invalidEmailMessage;
 
     public ProductCatalogue login(String email, String password) {
         userEmail.sendKeys(email);
@@ -33,8 +38,17 @@ public class LandingPage extends AbstractComponents {
         return productCatalogue;
     }
 
-    public void goTo(){
+    public void goTo() {
 
         driver.get("https://rahulshettyacademy.com/client");
     }
+
+    public String getIncorrectLoginMessage() {
+        return incorrectLoginMessage.getText();
+    }
+
+    public String getInvalidEmailMessage() {
+        return invalidEmailMessage.getText();
+    }
+
 }
