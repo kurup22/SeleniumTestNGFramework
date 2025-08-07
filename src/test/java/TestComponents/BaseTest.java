@@ -1,6 +1,11 @@
 package TestComponents;
 
 import PageObjects.LandingPage;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -9,10 +14,11 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.Properties;
+import java.util.*;
 
 public class BaseTest {
    public  WebDriver driver;
@@ -42,7 +48,22 @@ public class BaseTest {
 
             case "chrome":
                 ChromeOptions options=new ChromeOptions();
+                Map<String, Object> prefs = new HashMap<>();
+                prefs.put("credentials_enable_service", false);
+                prefs.put("profile.password_manager_enabled", false);
+                options.setExperimentalOption("prefs", prefs);
+                //options.addArguments("--user-data-dir=/tmp/chrome-profile-" + System.currentTimeMillis());
+
                 options.addArguments("--force-device-scale-factor=1.2");
+                options.addArguments("--disable-blink-features=AutomationControlled");
+                options.addArguments("--disable-infobars");
+                options.addArguments("--disable-notifications");
+                options.addArguments("--disable-save-password-bubble");
+                options.addArguments("--no-default-browser-check");
+                options.addArguments("--disable-autofill-keyboard-accessory-view");
+                options.addArguments("--disable-popup-blocking");
+                options.addArguments("--start-maximized");
+
                 // Initialize ChromeDriver here
                 driver=new ChromeDriver(options);
                 break;
@@ -82,4 +103,33 @@ public class BaseTest {
         }
     }
 
+
+       public List<HashMap<String, String>> getJsonData(String filePath) throws IOException {
+
+            String jsonData = FileUtils.readFileToString(new File(filePath), "UTF-8");
+            ObjectMapper mapper = new ObjectMapper();
+
+            List<HashMap<String,String>> data=mapper.readValue(jsonData,
+                    new TypeReference<List<HashMap<String,String>>>(){});
+
+            return data;
+
+
+            // Implement logic to read JSON data from the specified file path
+            // This could involve using a library like Jackson or Gson to parse the JSON file
+        }
+
+        public String getScreenshotPath(String testCaseName,WebDriver driver) throws IOException {
+
+        TakesScreenshot ts=(TakesScreenshot) driver;
+        File src=ts.getScreenshotAs(OutputType.FILE);
+        String destFilePath=System.getProperty("user.dir")+"//reports//"+testCaseName+".png";
+        File dest=new File(destFilePath);
+
+        FileUtils.copyFile(src, dest);
+        return destFilePath;
+
+        }
+
 }
+
